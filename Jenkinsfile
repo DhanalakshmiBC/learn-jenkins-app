@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
@@ -12,24 +13,26 @@ pipeline {
                       node --version &&
                       npm --version &&
                       npm ci &&
-                      npm run build
+                      npm run build &&
                       ls -la
                     "
                 '''
             }
         }
-        stage('Test'){
-            steps{
-               sh '''
-                 docker run --rm \
-                  -v "$PWD:/app \
-                  -w /app \
-                  node:18-alpine \
-                  sh -c "
-                   test -f 'build/index.html' &&
-                   npm test
-               "
-               '''
+
+        stage('Test') {
+            steps {
+                sh '''
+                  docker run --rm \
+                    -v "$PWD:/app" \
+                    -w /app \
+                    node:18-alpine \
+                    sh -c "
+                      npm ci &&
+                      test -f build/index.html &&
+                      npm test
+                    "
+                '''
             }
         }
     }
