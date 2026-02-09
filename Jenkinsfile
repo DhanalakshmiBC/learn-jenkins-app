@@ -39,12 +39,13 @@ pipeline {
     }
      stage('Deploy') {
             steps {
+            sh '''
               docker run --rm \
                     -v "$PWD:/app" \
                     -w /app \
                     node:18-alpine \
-                sh '''
-                   npm install netlify-cli@20.1.1
+                 sh -c "
+                   npm install netlify-cli@20.1.1 &&
                    node_modules/.bin/netlify --version
                     "
                 '''
