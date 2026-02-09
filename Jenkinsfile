@@ -30,6 +30,7 @@ pipeline {
                     sh -c "
                       npm ci &&
                       test -f build/index.html &&
+                      npm install --save-dev @babel/plugin-proposal-private-property-in-object &&
                       npm test
                     "
                 '''
