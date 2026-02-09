@@ -20,7 +20,15 @@ pipeline {
         }
         stage('Test'){
             steps{
-               sh test -f 'build/index.html'
+               sh '''
+               docker run --rm \
+               -v "$PWD:/app \
+               -w /app \
+               sh -c "
+                 test -f 'build/index.html'
+                 npm test
+               "
+               '''
             }
         }
     }
