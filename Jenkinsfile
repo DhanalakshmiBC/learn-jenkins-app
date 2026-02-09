@@ -20,21 +20,21 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh '''
-                  docker run --rm \
-                    -v "$PWD:/app" \
-                    -w /app \
-                    node:18-alpine \
-                    sh -c "
-                      npm ci &&
-                      test -f build/index.html &&
-                      npm test
-                    "
-                '''
-            }
-        }
+       stage('Test') {
+          steps {
+           sh '''
+            docker run --rm \
+            -v "$PWD:/app" \
+            -w /app \
+            -e CI=true \
+            node:18-alpine \
+            sh -c "
+              npm ci &&
+              npm test -- --ci --reporters=default --reporters=jest-junit
+            "
+        '''
+    }
+}
     }
     post {
         always {
