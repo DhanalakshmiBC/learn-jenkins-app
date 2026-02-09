@@ -36,6 +36,7 @@ pipeline {
               npm test -- --ci --reporters=default --reporters=jest-junit
             "
         '''
+      }
     }
      stage('Deploy') {
             steps {
@@ -52,7 +53,6 @@ pipeline {
             }
         }
 }
-    }
     post {
         always {
             junit 'junit.xml'
