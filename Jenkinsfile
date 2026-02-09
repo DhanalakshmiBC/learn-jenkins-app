@@ -21,12 +21,13 @@ pipeline {
         stage('Test'){
             steps{
                sh '''
-               docker run --rm \
-               -v "$PWD:/app \
-               -w /app \
-               sh -c "
-                 test -f 'build/index.html'
-                 npm test
+                 docker run --rm \
+                  -v "$PWD:/app \
+                  -w /app \
+                  node:18-alpine \
+                  sh -c "
+                   test -f 'build/index.html' &&
+                   npm test
                "
                '''
             }
