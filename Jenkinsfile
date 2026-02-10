@@ -4,6 +4,7 @@ pipeline {
     environment{
         NETLIFY_SITE_ID='aff2746e-65e5-443a-a379-dee099e711aa'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        NETLIFY_DISABLE_STATUS = true
     }
     stages {
         stage('Build') {
@@ -43,18 +44,23 @@ pipeline {
             steps {
             sh '''
               docker run --rm \
-                    -v "$PWD:/app" \
-                    -w /app \
-                    node:18-alpine \
-                 sh -c "
-                   npm install netlify-cli@20.1.1 &&
-                   node_modules/.bin/netlify --version &&
-                   echo 'deploying to production:' $NETLIFY_SITE_ID &&
-                   node_modules/.bin/netlify deploy --prod --dir=build --site=${NETLIFY_SITE_ID} --auth=${NETLIFY_AUTH_TOKEN} || true
-                   node_modules/.bin/netlify status &&
-                   node_modules/.bin/netlify api getSite --data '{"site_id":"'$NETLIFY_SITE_ID'"}'
-                    "
-                '''
+              -v "$PWD:/app" \
+              -w /app \
+              -e NETLIFY_AUTH_TOKEN=$NETLIFY_AUTH_TOKEN \
+              -e NETLIFY_SITE_ID=$NETLIFY_SITE_ID \
+              -e NETLIFY_DISABLE_STATUS=true \
+                 node:18-alpine \
+                sh -c "
+                  npm install netlify-cli@20.1.1 &&
+                  node_modules/.bin/netlify --version &&
+                  echo 'deploying to production: '$NETLIFY_SITE_ID &&
+                  node_modules/.bin/netlify deploy \
+                  --prod \
+                  --dir=build \
+                  --site=$NETLIFY_SITE_ID \
+                  --auth=$NETLIFY_AUTH_TOKEN
+    "
+'''
             }
         }
 }
