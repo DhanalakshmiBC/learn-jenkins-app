@@ -49,8 +49,9 @@ pipeline {
                  sh -c "
                    npm install netlify-cli@20.1.1 &&
                    node_modules/.bin/netlify --version &&
-                   echo "deploying to production $NETLIFY_SITE_ID" &&
-                   node_modules/.bin/netlify status
+                   echo 'deploying to production:' $NETLIFY_SITE_ID &&
+                   node_modules/.bin/netlify status &&
+                   node_modules/.bin/netlify api getSite --data '{"site_id":"'$NETLIFY_SITE_ID'"}'
                     "
                 '''
             }
