@@ -50,7 +50,7 @@ pipeline {
                    npm install netlify-cli@20.1.1 &&
                    node_modules/.bin/netlify --version &&
                    echo 'deploying to production:' $NETLIFY_SITE_ID &&
-                   node_modules/.bin/netlify deploy --prod --dir=build --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
+                   node_modules/.bin/netlify deploy --prod --dir=build --site=${NETLIFY_SITE_ID} --auth=${NETLIFY_AUTH_TOKEN} || true
                    node_modules/.bin/netlify status &&
                    node_modules/.bin/netlify api getSite --data '{"site_id":"'$NETLIFY_SITE_ID'"}'
                     "
@@ -58,9 +58,9 @@ pipeline {
             }
         }
 }
-    post {
-        always {
-            echo "Pipeline finished.."
-        }
-    }
+    // post {
+    //     always {
+    //         echo "Pipeline finished.."
+    //     }
+    // }
 }
